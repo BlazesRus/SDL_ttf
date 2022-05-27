@@ -17,17 +17,39 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseC99|Win32">
+      <Configuration>ReleaseC99</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="ReleaseC99|x64">
+      <Configuration>ReleaseC99</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>SDL2_ttf</ProjectName>
     <ProjectGuid>{DDDBD07D-DC76-4AF6-8D02-3E2DEB6EE255}</ProjectGuid>
     <RootNamespace>SDL_ttf</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <PlatformToolset>v142</PlatformToolset>
-    <!-- 142 for VS2019(Default);143 for VS2022-->
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '16' Or '$(VisualStudioVersion)' == ''">v142</PlatformToolset>
-    <PlatformToolset Condition="'$(VisualStudioVersion)' == '17'">v143</PlatformToolset>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Debug'">
+      <PropertyGroup>
+          <ConfigurationStyle>Debug</ConfigurationStyle>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+          <ConfigurationStyle>Release</ConfigurationStyle>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+  <PropertyGroup Label="ToolsetOptions">
+    <!-- 142 for VS2019(Default);143 for VS2022-->
+    <PlatformToolset Condition="'$(Configuration)' == 'ReleaseC99'">ClangCL</PlatformToolset>
+    <PlatformToolset Condition="'$(Configuration)' != 'ReleaseC99' And '$(VisualStudioVersion)' != '17'">v142</PlatformToolset>
+    <PlatformToolset Condition="'$(Configuration)' != 'ReleaseC99' And '$(VisualStudioVersion)' == '17'">v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="GlobalsPart2">
@@ -97,7 +119,7 @@
       <Command>xcopy external\lib\x64\LICENSE.* $(OutDir) $(OutDir) /DY </Command>
     </CustomBuildStep>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+  <ItemDefinitionGroup Condition="'$(ConfigurationStyle)'=='Release'">
     <Midl>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MkTypLibCompatible>true</MkTypLibCompatible>
@@ -124,10 +146,10 @@
       <AdditionalLibraryDirectories Condition="'$(Platform)'=='x64'">external\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
     </Link>
-    <PostBuildEvent Condition="'$(Configuration)'=='Release' And '$(Platform)'=='Win32'">
+    <PostBuildEvent Condition="'$(Platform)'=='Win32'">
       <Command>xcopy external\lib\x86\LICENSE.* $(OutDir) /DESY</Command>
     </PostBuildEvent>
-    <PostBuildEvent Condition="'$(Configuration)'=='Release' And '$(Platform)'=='x64'">
+    <PostBuildEvent Condition="'$(Platform)'=='x64'">
       <Command>xcopy external\lib\x64\LICENSE.* $(OutDir) /DESY</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
