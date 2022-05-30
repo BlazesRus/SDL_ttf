@@ -47,7 +47,7 @@ BEGIN
             VALUE "LegalCopyright", "Copyright © 2022 Sam Lantinga"
             VALUE "OriginalFilename", "SDL_ttf.dll"
             VALUE "ProductName", "Simple DirectMedia Layer"
-            VALUE "ProductVersion", "2, 19, 0, 0"
+            VALUE "ProductVersion", "2, 19, 0, f-BlazesRus"
         END
     END
     BLOCK "VarFileInfo"

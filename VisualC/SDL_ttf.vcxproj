@@ -32,7 +32,7 @@
     <RootNamespace>SDL_ttf</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-	<TargetName>SDL2_ttfBlazesRus</TargetName><!--Alternative name to make more obviously changed potential source code from fork-->
+	<TargetName>SDL2_ttf</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="UserMacros">
     <RootDirectory>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)..\..\'))</RootDirectory>
@@ -89,7 +89,7 @@
   <PropertyGroup Label="OutputInfo">
     <OutDir>$(SDLOutputDir)$(Platform)\</OutDir>
     <IntDir>$(SDLOutputDir)ObjectFiles\$(ProjectName)\$(Configuration)_$(Platform)\</IntDir>
-    <IncludePath>$(SDLDir);$(FreeTypeIncludesDir);..\external\harfbuzz\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SDLIncludesDir);$(FreeTypeIncludesDir);..\external\harfbuzz\src;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.BlazesRus</_ProjectFileVersion>
@@ -107,19 +107,20 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>external\include;external\include\harfbuzz;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(FreeTypeIncludesDir);external\include;external\include\harfbuzz;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DLL_EXPORT;WIN32;_DEBUG;_WINDOWS;TTF_USE_HARFBUZZ=1;FT_CONFIG_OPTION_USE_HARFBUZZ;FT2_BUILD_LIBRARY;HAVE_FREETYPE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet Condition="'$(Platform)'=='Win32' Or '$(Configuration)' == 'ReleaseC99'">StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+	  <EnableEnhancedInstructionSet Condition="'$(Platform)'=='x64' And '$(Configuration)' != 'ReleaseC99'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>$(SDLLibrary);ucrtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SDLLibrary);$(FreeTypeLibrary);ucrtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">external\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalLibraryDirectories Condition="'$(Platform)'=='x64'">external\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -144,17 +145,19 @@
       </HeaderFileName>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>external\include;external\include\harfbuzz;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(FreeTypeIncludesDir);external\include;external\include\harfbuzz;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DLL_EXPORT;WIN32;NDEBUG;_WINDOWS;TTF_USE_HARFBUZZ=1;FT_CONFIG_OPTION_USE_HARFBUZZ;FT2_BUILD_LIBRARY;HAVE_FREETYPE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet Condition="'$(Platform)'=='Win32' Or '$(Configuration)' == 'ReleaseC99'">StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+	  <EnableEnhancedInstructionSet Condition="'$(Platform)'=='x64' And '$(Configuration)' != 'ReleaseC99'">AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>$(SDLLibrary);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SDLLibrary);$(FreeTypeLibrary);%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories Condition="'$(Platform)'=='Win32'">external\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalLibraryDirectories Condition="'$(Platform)'=='x64'">external\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <SubSystem>Windows</SubSystem>
